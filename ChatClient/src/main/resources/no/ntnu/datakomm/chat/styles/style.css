@@ -1,0 +1,63 @@
+.button {
+    -fx-font-weight: bold;
+}
+
+.outputBox {
+    -fx-background-color: white;
+    -fx-font-size: 16px;
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+}
+
+.inputBox {
+    -fx-font-size: 16px;
+}
+
+.submitBtn {
+    -fx-pref-width: 100px;
+}
+
+.failedMessage {
+    -fx-background-color: rgb(255, 200, 200);
+}
+
+.sentMessage {
+    -fx-background-color: rgb(200, 255, 200);
+}
+
+.message {
+    -fx-padding: 8px;
+    -fx-background-radius: 30;
+}
+
+.otherMessage {
+    -fx-background-color: rgb(200, 200, 255);
+}
+
+.private {
+    -fx-font-style: italic;
+}
+
+.sender {
+    -fx-font-size: 12px;
+}
+
+.warning {
+    -fx-font-size: 14px;
+    -fx-background-color: rgb(252, 176, 64);
+}
+
+.info {
+    -fx-font-size: 14px;
+    -fx-background-color: rgb(234, 252, 64);
+}
+
+.user {
+    -fx-font-size: 10px;
+    -fx-padding: 4px;
+}
+
+.user:hover {
+    -fx-text-fill: rgb(200, 200, 255);
+    -fx-cursor: hand;
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane fx:controller="no.ntnu.datakomm.chat.GUIController" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" prefHeight="380.0" prefWidth="175.0" text="Users logged in">
+                     <content>
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="303.0" prefWidth="175.0">
+                           <content>
+                              <VBox fx:id="userList" prefHeight="249.0" prefWidth="132.0" />
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </TitledPane>
+                  <HBox prefHeight="32.0" prefWidth="175.0">
+                     <children>
+                        <TextField fx:id="loginInput" prefHeight="25.0" prefWidth="218.0" />
+                        <Button fx:id="loginBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="145.0" disable="true" text="Login" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="helpBtn" mnemonicParsing="false" disable="true" prefHeight="25.0" prefWidth="229.0" text="Help" />
+               </children>
+            </VBox>
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <BorderPane prefHeight="398.0" prefWidth="417.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <ScrollPane fx:id="outputScroll" hbarPolicy="NEVER" prefHeight="286.0" prefWidth="1256.0" BorderPane.alignment="CENTER">
+                     <content>
+                        <VBox fx:id="textOutput" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="395.0" />
+                     </content></ScrollPane>
+               </center>
+               <top>
+                  <HBox prefHeight="0.0" prefWidth="417.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <TitledPane fx:id="serverStatus" prefHeight="75.0" prefWidth="345.0" text="Server - disconnected">
+                           <content>
+                              <HBox prefHeight="49.0" prefWidth="325.0">
+                                 <children>
+                                    <Label prefHeight="25.0" prefWidth="37.0" text="HOST">
+                                       <HBox.margin>
+                                          <Insets bottom="2.0" left="8.0" top="2.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="hostInput" prefHeight="25.0" prefWidth="115.0">
+                                       <HBox.margin>
+                                          <Insets bottom="2.0" top="2.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Label prefHeight="25.0" prefWidth="35.0" text="PORT">
+                                       <HBox.margin>
+                                          <Insets bottom="2.0" left="8.0" top="2.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="portInput" prefHeight="25.0" prefWidth="69.0">
+                                       <HBox.margin>
+                                          <Insets bottom="2.0" left="8.0" top="2.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </TitledPane>
+                        <Button fx:id="connectBtn" mnemonicParsing="false" prefHeight="75.0" prefWidth="121.0" text="Connect" />
+                     </children>
+                  </HBox>
+               </top>
+               <bottom>
+                  <HBox prefHeight="28.0" prefWidth="417.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <TextArea fx:id="textInput" prefHeight="0.0" prefWidth="333.0" />
+                        <Button fx:id="submitBtn" mnemonicParsing="false" prefHeight="37.0" prefWidth="101.0" text="Submit" disable="true" />
+                     </children>
+                  </HBox>
+               </bottom>
+            </BorderPane>
+         </children></AnchorPane>
+  </items>
+</SplitPane>
