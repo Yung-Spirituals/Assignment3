@@ -1,5 +1,8 @@
 package no.ntnu.datakomm;
 
+import java.io.*;
+import java.net.Socket;
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
@@ -7,7 +10,8 @@ public class SimpleTcpClient {
     // Remote host where the server will be running
     private static final String HOST = "localhost";
     // TCP port
-    private static final int PORT = 1301;
+    private static final int PORT = 1234;
+    private Socket socket;
 
     /**
      * Run the TCP Client.
@@ -109,9 +113,19 @@ public class SimpleTcpClient {
      * @return True when connection established, false on error
      */
     private boolean connectToServer(String host, int port) {
-        // TODO - implement this method
         // Remember to catch all possible exceptions that the Socket class can throw.
-        return false;
+        boolean success = false;
+
+        try
+        {
+            this.socket = new Socket(host, port);
+            success = true;
+        }
+        catch (IOException e)
+        {
+            log("I/O exception occurred when attempting to connect to the server.");
+        }
+        return success;
     }
 
     /**
@@ -121,8 +135,18 @@ public class SimpleTcpClient {
      * return true as well.
      */
     private boolean closeConnection() {
-        // TODO - implement this method
-        return false;
+        if (!socket.isClosed())
+        {
+            try
+            {
+                this.socket.close();
+            }
+            catch (IOException e)
+            {
+                log("I/O exception occurred when attempting to close connection to the server.");
+            }
+        }
+        return socket.isClosed();
     }
 
 
@@ -133,9 +157,22 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
-        // TODO - implement this method
         // Hint: you should check if the connection is open
-        return false;
+        boolean success = false;
+        if (!socket.isClosed())
+        {
+            try {
+                OutputStream out = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(out, true);
+                writer.println(request);
+                writer.println("");
+                success = true;
+            }
+            catch (IOException e) {
+                log("I/O exception occurred when attempting to send a request to the server.");
+            }
+        }
+        return success;
     }
 
     /**
@@ -145,9 +182,27 @@ public class SimpleTcpClient {
      * (not included in the returned value).
      */
     private String readResponseFromServer() {
-        // TODO - implement this method
         // Hint: you should check if the connection is open
-        return null;
+        String response = null;
+        if (!socket.isClosed())
+        {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                StringBuilder builder = new StringBuilder();
+                String responseLine;
+                do {
+                    responseLine = reader.readLine();
+                    if (responseLine != null)
+                    {
+                        builder.append(responseLine).append("\n");
+                    }
+                } while (responseLine != null);
+                response = builder.toString();
+            } catch (IOException e) {
+                log("I/O exception occurred when attempting to read a response from the server.");
+            }
+        }
+        return response;
     }
 
     /**
