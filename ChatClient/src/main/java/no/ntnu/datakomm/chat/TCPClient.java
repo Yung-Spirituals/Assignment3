@@ -84,7 +84,7 @@ public class TCPClient {
         boolean success = false;
 
         if (isConnectionActive()){
-            if (cmd.trim().isBlank()){
+            if (cmd.isBlank()){
                 this.lastError = "Command was null or empty.";
             } else {
                 this.toServer.println(cmd);
@@ -107,9 +107,11 @@ public class TCPClient {
         // TODO Step 2: implement this method
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        boolean messageSent = sendCommand("msg " + message);
-        if (!messageSent){
-            this.lastError = "Message not sent.";
+        boolean messageSent = false;
+        if (message.isBlank()){
+            this.lastError = "Command was null or empty.";
+        } else {
+            messageSent = sendCommand("msg " + message.trim());
         }
         return messageSent;
     }
@@ -122,7 +124,11 @@ public class TCPClient {
     public void tryLogin(String username) {
         // TODO Step 3: implement this method
         // Hint: Reuse sendCommand() method
-        sendCommand("login " + username);
+        if (username.isBlank()){
+            this.lastError = "Command was null or empty.";
+        } else {
+            sendCommand("login " + username.trim());
+        }
     }
 
     /**
@@ -148,10 +154,10 @@ public class TCPClient {
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
         boolean success = false;
-        if (recipient.trim().isBlank() || message.trim().isBlank()){
+        if (recipient.isBlank() || message.isBlank()){
             this.lastError = "Recipient or message is blank.";
         } else {
-            success = sendCommand("privmsg " + recipient + " " + message);
+            success = sendCommand("privmsg " + recipient + " " + message.trim());
         }
         if (!success){
             this.lastError = "Private message not sent.";
@@ -180,7 +186,7 @@ public class TCPClient {
         // with the stream and hence the socket. Probably a good idea to close the socket in that case.
         String serverResponse = null;
         try {
-            serverResponse = this.fromServer.readLine();
+            serverResponse = this.fromServer.readLine().trim();
         } catch (IOException e){
             disconnect();
             this.lastError = "Error receiving message from server.";
@@ -232,8 +238,8 @@ public class TCPClient {
                     this.lastError = "Missing either command or argument.";
                 }
                 else {
-                    String command = commandAndArgument[0];
-                    String argument = commandAndArgument[1];
+                    String command = commandAndArgument[0].trim();
+                    String argument = commandAndArgument[1].trim();
 
                     switch (command) {
                         case "loginok":
@@ -251,16 +257,29 @@ public class TCPClient {
                             onUsersList(argument.split(" "));
                             break;
 
+                        // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg)
+                        // TODO Step 7: add support for incoming message errors (type: msgerr)
+                        // TODO Step 7: add support for incoming command errors (type: cmderr)
+                        // Hint for Step 7: call corresponding onXXX() methods which will notify all the listeners
+
+                        case "msg", "privmsg":
+                            String[] senderAndMessage = argument.split(" ", 2);
+                            onMsgReceived(command.equals("privmsg"), senderAndMessage[0], senderAndMessage[1]);
+                            break;
+
+                        case "msgerr":
+                            onMsgError(argument);
+                            break;
+
+                        case "cmderr":
+                            onCmdError(argument);
+                            break;
+
                         default:
                             break;
                     }
                 }
             }
-
-            // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg)
-            // TODO Step 7: add support for incoming message errors (type: msgerr)
-            // TODO Step 7: add support for incoming command errors (type: cmderr)
-            // Hint for Step 7: call corresponding onXXX() methods which will notify all the listeners
 
             // TODO Step 8: add support for incoming supported command list (type: supported)
 
@@ -339,6 +358,9 @@ public class TCPClient {
      */
     private void onMsgReceived(boolean priv, String sender, String text) {
         // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onMessageReceived(new TextMessage(sender, priv, text));
+        }
     }
 
     /**
@@ -348,6 +370,9 @@ public class TCPClient {
      */
     private void onMsgError(String errMsg) {
         // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onMessageError(errMsg);
+        }
     }
 
     /**
@@ -357,6 +382,9 @@ public class TCPClient {
      */
     private void onCmdError(String errMsg) {
         // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onCommandError(errMsg);
+        }
     }
 
     /**
