@@ -147,7 +147,16 @@ public class TCPClient {
         // TODO Step 6: Implement this method
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        boolean success = false;
+        if (recipient.trim().isBlank() || message.trim().isBlank()){
+            this.lastError = "Recipient or message is blank.";
+        } else {
+            success = sendCommand("privmsg " + recipient + " " + message);
+        }
+        if (!success){
+            this.lastError = "Private message not sent.";
+        }
+        return success;
     }
 
 
