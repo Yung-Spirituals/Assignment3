@@ -133,6 +133,7 @@ public class TCPClient {
         // TODO Step 5: implement this method
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
+        sendCommand("users");
     }
 
     /**
@@ -217,7 +218,7 @@ public class TCPClient {
             // Hint: In Step 3 reuse onLoginResult() method
             String serverResponse = waitServerResponse();
             if (serverResponse != null){
-                String[] commandAndArgument= serverResponse.split(" ", 2);
+                String[] commandAndArgument = serverResponse.split(" ", 2);
                 if (commandAndArgument.length != 2) {
                     this.lastError = "Missing either command or argument.";
                 }
@@ -234,13 +235,18 @@ public class TCPClient {
                             onLoginResult(false, argument);
                             break;
 
+                        // TODO Step 5: update this method, handle user-list response from the server
+                        //Hint: In Step 5 reuse onUserList() method
+
+                        case "users":
+                            onUsersList(argument.split(" "));
+                            break;
+
                         default:
                             break;
                     }
                 }
             }
-            // TODO Step 5: update this method, handle user-list response from the server
-            //Hint: In Step 5 reuse onUserList() method
 
             // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg)
             // TODO Step 7: add support for incoming message errors (type: msgerr)
@@ -310,6 +316,9 @@ public class TCPClient {
      */
     private void onUsersList(String[] users) {
         // TODO Step 5: Implement this method
+        for (ChatListener l : listeners) {
+            l.onUserList(users);
+        }
     }
 
     /**
