@@ -52,6 +52,17 @@ public class TCPClient {
     public synchronized void disconnect() {
         // TODO Step 4: implement this method
         // Hint: remember to check if connection is active
+        if (isConnectionActive()){
+            try {
+                this.connection.close();
+                this.connection = null;
+                onDisconnect();
+            } catch (IOException e){
+                this.connection = null;
+                this.lastError = "Error disconnecting from the server.";
+            }
+        }
+
     }
 
     /**
@@ -161,6 +172,7 @@ public class TCPClient {
         try {
             serverResponse = this.fromServer.readLine();
         } catch (IOException e){
+            disconnect();
             this.lastError = "Error receiving message from server.";
         }
 
@@ -286,6 +298,9 @@ public class TCPClient {
     private void onDisconnect() {
         // TODO Step 4: Implement this method
         // Hint: all the onXXX() methods will be similar to onLoginResult()
+        for (ChatListener l : listeners) {
+            l.onDisconnect();
+        }
     }
 
     /**
