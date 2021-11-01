@@ -70,8 +70,21 @@ public class TCPClient {
     private boolean sendCommand(String cmd) {
         // TODO Step 2: Implement this method
         // Hint: Remember to check if connection is active
-        return false;
+        boolean success = false;
+
+        if (isConnectionActive()){
+            if (cmd.trim().isBlank()){
+                this.lastError = "Command was null or empty.";
+            } else {
+                this.toServer.println(cmd);
+                success = true;
+            }
+        } else {
+            this.lastError = "Cannot send msg as client is not connected to a server.";
+        }
+        return success;
     }
+
 
     /**
      * Send a public message to all the recipients.
@@ -83,7 +96,11 @@ public class TCPClient {
         // TODO Step 2: implement this method
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        boolean messageSent = sendCommand("msg " + message);
+        if (!messageSent){
+            this.lastError = "Message not sent.";
+        }
+        return messageSent;
     }
 
     /**
