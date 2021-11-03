@@ -172,6 +172,7 @@ public class TCPClient {
     public void askSupportedCommands() {
         // TODO Step 8: Implement this method
         // Hint: Reuse sendCommand() method
+        sendCommand("help");
     }
 
 
@@ -234,13 +235,14 @@ public class TCPClient {
             String serverResponse = waitServerResponse();
             if (serverResponse != null){
                 String[] commandAndArgument = serverResponse.split(" ", 2);
-                if (commandAndArgument.length != 2) {
-                    this.lastError = "Missing either command or argument.";
+                String command;
+                String argument = "";
+                if (commandAndArgument.length == 2) {
+                    command = commandAndArgument[0].trim();
+                    argument = commandAndArgument[1].trim();
+                } else {
+                    command = commandAndArgument[0];
                 }
-                else {
-                    String command = commandAndArgument[0].trim();
-                    String argument = commandAndArgument[1].trim();
-
                     switch (command) {
                         case "loginok":
                             onLoginResult(true, null);
@@ -275,14 +277,16 @@ public class TCPClient {
                             onCmdError(argument);
                             break;
 
+                        // TODO Step 8: add support for incoming supported command list (type: supported)
+
+                        case "supported":
+                            onSupported(argument.split(" "));
+                            break;
+
                         default:
                             break;
-                    }
                 }
             }
-
-            // TODO Step 8: add support for incoming supported command list (type: supported)
-
         }
     }
 
@@ -395,6 +399,9 @@ public class TCPClient {
      */
     private void onSupported(String[] commands) {
         // TODO Step 8: Implement this method
+        for (ChatListener l : listeners) {
+            l.onSupportedCommands(commands);
+        }
     }
 }
 
